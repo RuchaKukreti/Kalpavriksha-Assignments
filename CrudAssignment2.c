@@ -15,7 +15,7 @@ user getDetails(){
     scanf("%s",u.name);
     printf("age: ");
     scanf("%d",&u.age);
-    while(u.age<1 && u.age>100){
+    while(u.age<1 || u.age>100){
         printf("Enter valid age.\n");
         scanf("%d",&u.age);
     }
