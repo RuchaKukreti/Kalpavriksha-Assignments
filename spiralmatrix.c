@@ -20,9 +20,9 @@ int main()
         }
     }
     printf("Matrix:\n");
-    for(int i=0;i<rows;i++){
-        for(int j=0;j<columns;j++){
-            printf("%d  ",array[i][j]);
+    for(int row=0;row<rows;row++){
+        for(int column=0;column<columns;column++){
+            printf("%d  ",array[row][column]);
         }
         printf("\n");
     }
@@ -46,6 +46,10 @@ int main()
         }
         left++;
     }
+    for(int row=0;row<rows;row++){
+        free(array[row]);
+    }
+    free(array);
     return 0;
     }
  
