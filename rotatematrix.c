@@ -39,6 +39,10 @@ int main()
         }
         printf("\n");
     }
+    for(int row=0;row<rows;row++){
+            free(array[row]);
+    }
+    free(array);
     return 0;
     }
  
