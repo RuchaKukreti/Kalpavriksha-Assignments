@@ -1,11 +1,3 @@
-/******************************************************************************
-
-                            Online C Compiler.
-                Code, Compile, Run and Debug C program online.
-Write your code in this editor and press "Run" button to compile and execute it.
-
-*******************************************************************************/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -58,5 +50,14 @@ int main()
     }
     printf("Number of names starting with a vowel:%d\n", vowels);
     printf("The longest name:%s", longest_name);
+    for (int row = 0; row < rows; row++)
+    {
+        for (int column = 0; column < columns; column++)
+        {
+            free(array[row][column]);
+        }
+        free(array[row]);
+    }
+    free(array);
     return 0;
 }
