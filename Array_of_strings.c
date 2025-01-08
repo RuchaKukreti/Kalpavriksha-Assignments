@@ -14,19 +14,24 @@ int main()
 {
     int rows, columns, vowels = 0, max_length = 0;
     char longest_name[100] = {'\0'};
-    scanf("%d%d", &rows, &columns);
-    if (rows == 0 || columns == 0)
+    printf("Enter number of rows:");
+    scanf("%d", &rows);
+    printf("Enter number of columns:");
+    scanf("%d", &columns);
+    if (rows < 1 || rows > 10 || columns < 1 || columns > 101)
     {
-        printf("Enter non-zero values of rows and columns.");
+        printf("Enter value of rows between 1 and 10 & Enter value of columns between 1 and 101.\n");
         return 0;
     }
     char ***array = malloc(rows * sizeof(char **));
+    printf("Enter the names:\n");
     for (int row = 0; row < rows; row++)
     {
         array[row] = malloc(columns * sizeof(char *));
         for (int column = 0; column < columns; column++)
         {
             array[row][column] = malloc(50 * sizeof(char));
+            printf("Name at (%d,%d):",row,column);
             scanf("%s", array[row][column]);
             if (strlen(array[row][column]) > max_length)
             {
@@ -48,8 +53,20 @@ int main()
         }
         printf("\n");
     }
+    printf("\n");
     printf("Number of names starting with a vowel:%d\n", vowels);
-    printf("The longest name:%s", longest_name);
+    printf("The longest name:\n");
+    for (int row = 0; row < rows; row++)
+    {
+        for (int column = 0; column < columns; column++)
+        {   
+            if(strlen(array[row][column]) == max_length){
+            
+                printf("%s\n", array[row][column]);
+            
+            }
+        }
+    }
     for (int row = 0; row < rows; row++)
     {
         for (int column = 0; column < columns; column++)
