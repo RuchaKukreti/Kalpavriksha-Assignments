@@ -9,6 +9,14 @@ int trace(int **matrix, int rows)
     }
     return sum;
 }
+void free_matrix(int **matrix, int rows)
+{
+    for (int row = 0; row < rows; row++)
+    {
+        free(matrix[row]);
+    }
+    free(matrix);
+}
 int main()
 {
     int rows = 0;
@@ -49,5 +57,7 @@ int main()
     {
         printf("Both matrices do not have equal traces.");
     }
+    free_matrix(matrix1, rows);
+    free_matrix(matrix2, rows);
     return 0;
 }
