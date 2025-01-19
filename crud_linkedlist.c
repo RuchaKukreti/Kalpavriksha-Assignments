@@ -16,9 +16,14 @@ struct node *create(int value)
 void insertAtPosition(int position, int value)
 {
     struct node *temp = head, *newnode = create(value);
-    if (head == NULL)
+    if (head == NULL && position == 1)
     {
-        head = temp;
+        head = newnode;
+        return;
+    }
+    if (position < 1)
+    {
+        printf("Invalid position.\n");
         return;
     }
     if (position == 1)
@@ -27,12 +32,13 @@ void insertAtPosition(int position, int value)
         head = newnode;
         return;
     }
-    while (temp->next != NULL && position > 2)
+    int i = 1;
+    while (temp->next != NULL && i < position - 1)
     {
         temp = temp->next;
-        position--;
+        i++;
     }
-    if (position != 3)
+    if (i != position - 1)
     {
         printf("Invalid position.\n");
         return;
@@ -40,6 +46,7 @@ void insertAtPosition(int position, int value)
     newnode->next = temp->next;
     temp->next = newnode;
 }
+
 void insertAtBeginning(int value)
 {
     insertAtPosition(1, value);
@@ -79,6 +86,11 @@ void updateAtPosition(int position, int newValue)
     if (head == NULL)
         return;
     struct node *temp = head;
+    if (position < 1)
+    {
+        printf("Invalid position.\n");
+        return;
+    }
     if (position == 1)
     {
         head->val = newValue;
@@ -97,7 +109,7 @@ void updateAtPosition(int position, int newValue)
     }
     if (temp == NULL || temp->next == NULL)
     {
-        printf("The position is not present.\n");
+        printf("Invalid position.\n");
         return;
     }
     temp->next->val = newValue;
@@ -130,38 +142,52 @@ void deleteAtEnd()
 }
 void deleteAtPosition(int position)
 {
-    if (head == NULL)
+    if (position < 1)
     {
-        head = NULL;
+        printf("Invalid position");
         return;
     }
-    if (position == 1 && head->next == NULL)
+    if (head == NULL)
+    {
+        return;
+    }
+    if (position == 1)
     {
         head = head->next;
         return;
     }
-    struct node *temp = head, *prev = head;
-    while (position > 1 && temp != NULL)
+    struct node *temp = head;
+    int i = 1;
+    while (i < position - 1 && temp != NULL)
     {
-        prev = temp;
+        i++;
         temp = temp->next;
-        position--;
     }
-    if (position != 1)
+    if (i != position - 1)
     {
-        printf("Invalid position\n");
+        printf("Invalid position");
+        return;
+    }
+    if (temp->next != NULL)
+    {
+        temp->next = temp->next->next;
     }
     else
     {
-        if (temp == NULL)
-        {
-            prev->next = NULL;
-        }
-        else
-        {
-            prev->next = temp->next;
-            free(temp);
-        }
+        temp->next = NULL;
+    }
+}
+void free_linkedlist()
+{
+    if (head == NULL)
+    {
+        return;
+    }
+    while (head)
+    {
+        struct node *temp = head;
+        head = head->next;
+        free(temp);
     }
 }
 int main()
@@ -218,5 +244,6 @@ int main()
             break;
         }
     }
+    free_linkedlist();
     return 0;
 }
