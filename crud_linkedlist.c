@@ -1,249 +1,232 @@
 #include <stdio.h>
 #include <stdlib.h>
-struct node
+#define minNumberOfOperations 1
+#define maxNumberOfOperations 100
+typedef struct node
 {
-    int val;
+    int data;
     struct node *next;
-};
-struct node *head = NULL;
-struct node *create(int value)
+} node;
+node *create(int value)
 {
-    struct node *temp = (struct node *)malloc(sizeof(struct node));
-    temp->val = value;
+    node *temp = (struct node *)malloc(sizeof(struct node));
+    if (!temp)
+    {
+        printf("Memory allocation failed.\n");
+        return NULL;
+    }
+
+    temp->data = value;
     temp->next = NULL;
     return temp;
 }
-void insertAtPosition(int position, int value)
+void insertAtPosition(node **head, int position, int value)
 {
-    struct node *temp = head, *newnode = create(value);
-    if (head == NULL && position == 1)
-    {
-        head = newnode;
-        return;
-    }
-    if (position < 1)
-    {
-        printf("Invalid position.\n");
-        return;
-    }
+    node *temp = *head;
     if (position == 1)
     {
-        newnode->next = head;
-        head = newnode;
+        node *newnode = create(value);
+        newnode->next = *head;
+        *head = newnode;
         return;
     }
-    int i = 1;
-    while (temp->next != NULL && i < position - 1)
+    while (position != 2 && temp->next != NULL)
     {
         temp = temp->next;
-        i++;
+        position--;
     }
-    if (i != position - 1)
+    if (position != 2)
     {
         printf("Invalid position.\n");
         return;
     }
+    node *newnode = create(value);
     newnode->next = temp->next;
     temp->next = newnode;
 }
-
-void insertAtBeginning(int value)
+void display(node *head)
 {
-    insertAtPosition(1, value);
-}
-void insertAtEnd(int value)
-{
-    struct node *temp = head, *newnode = create(value);
     if (head == NULL)
     {
-        head = newnode;
+        printf("Empty list\n");
         return;
     }
-    while (temp->next != NULL)
+    while (head != NULL)
     {
-        temp = temp->next;
-    }
-    temp->next = newnode;
-}
-
-void display()
-{
-    struct node *temp = head;
-    if (temp == NULL)
-    {
-        printf("Empty\n");
-        return;
-    }
-    while (temp != NULL && temp != NULL)
-    {
-        printf("->%d", temp->val);
-        temp = temp->next;
+        printf("->%d", head->data);
+        head = head->next;
     }
     printf("\n");
 }
-void updateAtPosition(int position, int newValue)
+void updateAtPosition(node **head, int position, int newValue)
 {
-    if (head == NULL)
-        return;
-    struct node *temp = head;
-    if (position < 1)
-    {
-        printf("Invalid position.\n");
-        return;
-    }
+    node *temp = *head;
     if (position == 1)
     {
-        head->val = newValue;
-        return;
-    }
-    for (int row = 1; row < position - 1; row++)
-    {
-        if (temp != NULL)
+        if (*head == NULL)
         {
-            temp = temp->next;
+            printf("Empty list\n");
         }
         else
         {
-            break;
+            (*head)->data = newValue;
         }
+        return;
     }
-    if (temp == NULL || temp->next == NULL)
+    while (position != 1 && temp != NULL && temp->next != NULL)
+    {
+        temp = temp->next;
+        position--;
+    }
+    if (position != 1)
     {
         printf("Invalid position.\n");
         return;
     }
-    temp->next->val = newValue;
+    temp->data = newValue;
 }
-void deleteAtBeginning()
+void deleteAtPosition(node **head, int position)
 {
-    if (head == NULL || head->next == NULL)
-    {
-        head = NULL;
-        return;
-    }
-    struct node *temp = head;
-    head = head->next;
-    free(temp);
-}
-void deleteAtEnd()
-{
-    if (head == NULL || head->next == NULL)
-    {
-        head = NULL;
-        return;
-    }
-    struct node *temp = head;
-    while (temp->next->next != NULL)
-    {
-        temp = temp->next;
-    }
-    free(temp->next);
-    temp->next = NULL;
-}
-void deleteAtPosition(int position)
-{
-    if (position < 1)
-    {
-        printf("Invalid position");
-        return;
-    }
-    if (head == NULL)
-    {
-        return;
-    }
     if (position == 1)
     {
-        head = head->next;
+        if (*head == NULL)
+        {
+            printf("Empty list.\n");
+        }
+        else
+        {
+            node *temp = *head;
+            *head = (*head)->next;
+            free(temp);
+            temp = NULL;
+        }
         return;
     }
-    struct node *temp = head;
-    int i = 1;
-    while (i < position - 1 && temp != NULL)
+    node *temp = *head;
+    while (position != 2 && temp != NULL && temp->next != NULL)
     {
-        i++;
         temp = temp->next;
+        position--;
     }
-    if (i != position - 1)
+    if (position != 2)
     {
-        printf("Invalid position");
+        printf("Invalid position.\n");
         return;
     }
-    if (temp->next != NULL)
+    if (temp->next)
     {
+        node *middleNode = temp->next;
         temp->next = temp->next->next;
+        free(middleNode);
+        middleNode = NULL;
     }
     else
     {
-        temp->next = NULL;
+        printf("Invalid position.\n");
+        return;
     }
 }
-void free_linkedlist()
+void free_linkedlist(node **head)
 {
-    if (head == NULL)
+    if (*head == NULL)
     {
         return;
     }
-    while (head)
+    node *temp = *head;
+    while (temp)
     {
-        struct node *temp = head;
-        head = head->next;
-        free(temp);
+        struct node *t = *head;
+        temp = temp->next;
+        free(t);
     }
 }
+
 int main()
 {
-    int num = 0, choice = 0;
-    scanf("%d", &num);
-    for (int i = 0; i < num; i++)
+    int numberOfOperations = 0, choice = 0;
+    printf("Enter the number of operations :");
+    scanf("%d", &numberOfOperations);
+    if (numberOfOperations < minNumberOfOperations || numberOfOperations > maxNumberOfOperations)
     {
+        printf("Enter number of operations between 1 and 100.\n");
+        return 0;
+    }
+    node *head = NULL;
+    for (int operation = 0; operation < numberOfOperations; operation++)
+    {
+        printf("1.Insert at end.\n2.Insert at beginning.\n3.Insert at position.\n4.Display.\n5.Update at position.\n6.Delete at beginning.\n7.Delete at end.\n8.Delete at position.\n");
+        printf("Enter choice:");
         scanf("%d", &choice);
         if (choice == 1)
         {
             int value = 0;
+            printf("Enter value of the node: ");
             scanf("%d", &value);
-            insertAtEnd(value);
+            int position = 1;
+            struct node *temp = head;
+            while (temp != NULL)
+            {
+                position++;
+                temp = temp->next;
+            }
+            insertAtPosition(&head, position, value);
         }
         else if (choice == 2)
         {
             int value = 0;
+            printf("Enter value of the node: ");
             scanf("%d", &value);
-            insertAtBeginning(value);
+            insertAtPosition(&head, 1, value);
         }
         else if (choice == 3)
         {
             int position = 0, value = 0;
-            scanf("%d%d", &position, &value);
-            insertAtPosition(position, value);
+            printf("Enter value of the position: ");
+            scanf("%d", &position);
+            printf("Enter value of the node: ");
+            scanf("%d", &value);
+            insertAtPosition(&head, position, value);
         }
         else if (choice == 4)
         {
-            display();
+            display(head);
         }
         else if (choice == 5)
         {
             int position = 0, newValue = 0;
-            scanf("%d%d", &position, &newValue);
-            updateAtPosition(position, newValue);
+            printf("Enter value of the position: ");
+            scanf("%d", &position);
+            printf("Enter the new value of the node: ");
+            scanf("%d", &newValue);
+            updateAtPosition(&head, position, newValue);
         }
         else if (choice == 6)
         {
-            deleteAtBeginning();
+            deleteAtPosition(&head, 1);
         }
         else if (choice == 7)
         {
-            deleteAtEnd();
+            int position = 1;
+            node *temp = head;
+            while (temp != NULL && temp->next != NULL)
+            {
+                position++;
+                temp = temp->next;
+            }
+            deleteAtPosition(&head, position);
         }
         else if (choice == 8)
         {
             int position = 0;
+            printf("Enter value of the position: ");
             scanf("%d", &position);
-            deleteAtPosition(position);
+            deleteAtPosition(&head, position);
         }
         else
         {
-            break;
+            printf("Enter valid choice.\n");
         }
     }
-    free_linkedlist();
+    free_linkedlist(&head);
     return 0;
 }
