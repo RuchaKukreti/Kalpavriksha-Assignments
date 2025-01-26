@@ -25,9 +25,9 @@ void insertAtPosition(node **head, int position, int value)
     node *temp = *head;
     if (position == 1)
     {
-        node *newnode = create(value);
-        newnode->next = *head;
-        *head = newnode;
+        node *newNode = create(value);
+        newNode->next = *head;
+        *head = newNode;
         return;
     }
     while (position != 2 && temp->next != NULL)
@@ -40,9 +40,9 @@ void insertAtPosition(node **head, int position, int value)
         printf("Invalid position.\n");
         return;
     }
-    node *newnode = create(value);
-    newnode->next = temp->next;
-    temp->next = newnode;
+    node *newNode = create(value);
+    newNode->next = temp->next;
+    temp->next = newNode;
 }
 void display(node *head)
 {
