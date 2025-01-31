@@ -24,9 +24,10 @@ Enter number of citations for paper 3 :1
 
 #### Output:
 
-Research Papers in decreasing order of number of citations:
+-Research Papers in decreasing order of number of citations:
 [ 4 3 1 1 ]
-H-Index for the publisher is 2
+
+-H-Index for the publisher is 2
 
 ### Time Complexity:
 
