@@ -42,7 +42,7 @@ int main()
     int numberOfOperations = 0, choice = 0;
     printf("Enter the number of operations: ");
     scanf("%d", &numberOfOperations);
-    for (int i = 0; i < numberOfOperations; i++)
+    for (int operation = 0; operation < numberOfOperations; operation++)
     {
         printf("Press\n1.push\n2.pop\n3.peek\n4.isEmpty\n5.size\n6.Exit\nEnter choice: ");
         scanf("%d", &choice);
