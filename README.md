@@ -27,3 +27,4 @@
 1.Efficiency: A stack implemented using a linked list ensures constant time complexity (O(1)) for all core operations (push, pop, peek, isEmpty).
 2.Flexibility: Unlike array-based stacks, a linked list allows dynamic memory allocation, so the stack size can grow and shrink as needed without worrying about overflow or underutilization.
 3.Memory Management: Memory is allocated dynamically for each element, making it more flexible than a fixed-size array, but with the slight overhead of pointer storage in each node.
+=======
