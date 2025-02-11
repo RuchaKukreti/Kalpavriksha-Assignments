@@ -17,19 +17,19 @@ node *createNode(int value)
     temporaryNode->next = NULL;
     return temporaryNode;
 }
-void createList(node **head, int value)
+void addNodeToList(node **head, int value)
 {
     if (*head == NULL)
     {
         *head = createNode(value);
         return;
     }
-    node *pointerToHead = *head;
-    while (pointerToHead->next != NULL)
+    node *currentNode = *head;
+    while (currentNode->next != NULL)
     {
-        pointerToHead = pointerToHead->next;
+        currentNode = currentNode->next;
     }
-    pointerToHead->next = createNode(value);
+    currentNode->next = createNode(value);
 }
 void inputElements(node **head, int numberOfElements)
 {
@@ -38,7 +38,7 @@ void inputElements(node **head, int numberOfElements)
     {
         printf("Enter element %d :", iterator);
         scanf("%d", &element);
-        createList(head, element);
+        addNodeToList(head, element);
     }
 }
 void printElements(node *head)
@@ -88,28 +88,29 @@ node *insertionSortList(node *head)
 }
 node *distinctList(node *head)
 {
-    node *temp = head, *prev = head;
-    while (temp != NULL && temp->next != NULL)
+    node *temporaryNode = head, *previousNode = head;
+    while (temporaryNode != NULL && temporaryNode->next != NULL)
     {
-        prev = temp;
-        while (temp != NULL && prev->data == temp->data)
+        previousNode = temporaryNode;
+        while (temporaryNode != NULL && previousNode->data == temporaryNode->data)
         {
-            temp = temp->next;
+            temporaryNode = temporaryNode->next;
         }
-        prev->next = temp;
+        previousNode->next = temporaryNode;
     }
     return head;
 }
 void freeLinkedList(node *head)
 {
 
-    node *temp = head;
+    node *temporaryNode = head;
     while (head != NULL)
     {
 
-        temp = head;
+        temporaryNode = head;
         head = head->next;
-        free(temp);
+        free(temporaryNode);
+        temporaryNode=NULL;
     }
 }
 int main()
