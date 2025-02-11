@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define maxWordSize 50
+#define MAX_WORD_SIZE 50
 typedef struct node
 {
-    char data[maxWordSize];
+    char data[MAX_WORD_SIZE];
     struct node *next;
 } node;
 void stringCopy(char *string1, char *string2)
@@ -14,11 +14,7 @@ void stringCopy(char *string1, char *string2)
         string1[iterator] = string2[iterator];
         iterator++;
     }
-    while (string1[iterator] != '\0')
-    {
-        string1[iterator] = '\0';
-        iterator++;
-    }
+    string1[iterator] = '\0';
 }
 node *createNode(char *value)
 {
@@ -39,16 +35,16 @@ void createList(node **head, char *value)
         *head = createNode(value);
         return;
     }
-    node *pointerToHead = *head;
-    while (pointerToHead->next != NULL)
+    node *traversalPointer = *head;
+    while (traversalPointer->next != NULL)
     {
-        pointerToHead = pointerToHead->next;
+        traversalPointer = traversalPointer->next;
     }
-    pointerToHead->next = createNode(value);
+    traversalPointer->next = createNode(value);
 }
 void inputProducts(node **head, int numberOfProducts)
 {
-    char productName[maxWordSize];
+    char productName[MAX_WORD_SIZE];
     for (int productNumber = 1; productNumber < numberOfProducts + 1; productNumber++)
     {
         printf("Enter product %d :", productNumber);
@@ -100,19 +96,20 @@ int linearSearchProduct(node *head, char *valueToBeSearched)
 }
 void freeLinkedList(node *head)
 {
-    node *temp = head;
+    node *temporarayNode = head;
     while (head != NULL)
     {
-        temp = head;
+        temporarayNode = head;
         head = head->next;
-        free(temp);
+        free(temporarayNode);
+        temporarayNode = NULL;
     }
 }
 int main()
 {
     int numberOfProducts = 0, hIndex = 0;
     node *head = NULL;
-    char productToBeSearched[maxWordSize];
+    char productToBeSearched[MAX_WORD_SIZE];
     printf("Enter the number of products: ");
     scanf("%d", &numberOfProducts);
     inputProducts(&head, numberOfProducts);
