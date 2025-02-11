@@ -5,10 +5,10 @@ typedef struct node
     int data;
     struct node *next;
 } node;
-typedef struct que
+typedef struct queueStructure
 {
     node *stackTop;
-} que;
+} queueStructure;
 node *createNode(int element)
 {
     node *newNode = malloc(sizeof(node));
@@ -44,8 +44,11 @@ int pop(node **stackTop)
         printf("Stack is empty.\n");
         return -1;
     }
+    node *temporaryNode=*stackTop;
     int poppedValue = (*stackTop)->data;
     *stackTop = (*stackTop)->next;
+    free(temporaryNode);
+    temporaryNode=NULL;
     return poppedValue;
 }
 int peek(node *stackTop)
@@ -65,34 +68,31 @@ int isEmpty(node *stackTop)
 {
     return (stackTop == NULL);
 }
-void enqueue(que *queue, int element)
+void enqueue(queueStructure *queue, int element)
 {
     push(&queue->stackTop, element);
 }
-int dequeue(que *queue)
+int dequeue(queueStructure *queue)
 {
-    node *stackTemporary = (node *)malloc(sizeof(node *));
-    int sizeOfStack = size(queue->stackTop);
-    while (sizeOfStack > 1)
-    {
-        int element = pop(&queue->stackTop);
-        push(&stackTemporary, element);
-        sizeOfStack--;
+    if(queue->stackTop == NULL){
+        return -1;
     }
-    int value = pop(&queue->stackTop);
-    sizeOfStack = size(stackTemporary);
-    while (sizeOfStack > 1)
-    {
-        int element = pop(&stackTemporary);
-        push(&queue->stackTop, element);
-        sizeOfStack--;
+    int poppedValue = pop(&queue->stackTop);
+    if(queue->stackTop != NULL){
+        int dequeuedValue = dequeue(queue);
+        enqueue(queue, poppedValue);
+        return dequeuedValue;
     }
-    return value;
+    return poppedValue;
 }
-
+void freeStack(node *top){
+    while(top!=NULL){
+        pop(&top);
+    }
+}
 int main()
 {
-    que *queue = (que *)malloc(sizeof(que));
+    queueStructure *queue = (queueStructure *)malloc(sizeof(queueStructure));
     queue->stackTop = NULL;
     int numberOfOperations = 0, choice = 0;
     printf("Enter the number of operations: ");
@@ -114,6 +114,10 @@ int main()
             if (dequeuedValue != -1)
             {
                 printf("Dequeued value: %d\n", dequeuedValue);
+            }
+            else
+            {
+                printf("Empty queue.\n");
             }
         }
         else if (choice == 3)
@@ -149,5 +153,7 @@ int main()
             printf("Enter valid choice.\n");
         }
     }
+    freeStack(queue->stackTop);
+    queue->stackTop=NULL;
     return 0;
 }
