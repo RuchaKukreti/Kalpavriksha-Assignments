@@ -5,11 +5,11 @@ typedef struct node
     int data;
     struct node *next;
 } node;
-typedef struct que
+typedef struct queueStructure
 {
-    node *stackTop;
-    node *stackTemp;
-} que;
+    node *mainStackTop;
+    node *secondaryStackTop;
+} queueStructure;
 node *createNode(int element)
 {
     node *newNode = malloc(sizeof(node));
@@ -17,84 +17,92 @@ node *createNode(int element)
     newNode->data = element;
     return newNode;
 }
-int size(node *stackTop)
+int size(node *mainStackTop)
 {
     int countOfElements = 0;
-    while (stackTop)
+    while (mainStackTop)
     {
         countOfElements++;
-        stackTop = stackTop->next;
+        mainStackTop = mainStackTop->next;
     }
     return countOfElements;
 }
-void push(node **stackTop, int element)
+void push(node **mainStackTop, int element)
 {
-    if (size(*stackTop) >= 100)
+    if (size(*mainStackTop) >= 100)
     {
         printf("Stack is full.");
         return;
     }
     node *newNode = createNode(element);
-    newNode->next = *stackTop;
-    *stackTop = newNode;
+    newNode->next = *mainStackTop;
+    *mainStackTop = newNode;
 }
-int pop(node **stackTop)
+int pop(node **mainStackTop)
 {
-    if (*stackTop == NULL)
+    if (*mainStackTop == NULL)
     {
         printf("Stack is empty.\n");
         return -1;
     }
-    int poppedValue = (*stackTop)->data;
-    *stackTop = (*stackTop)->next;
+    int poppedValue = (*mainStackTop)->data;
+    *mainStackTop = (*mainStackTop)->next;
     return poppedValue;
 }
-int peek(node *stackTop)
+int peek(node *mainStackTop)
 {
-    if (stackTop == NULL)
+    if (mainStackTop == NULL)
     {
         printf("Stack is empty.\n");
         return -1;
     }
-    while (stackTop->next != NULL)
+    while (mainStackTop->next != NULL)
     {
-        stackTop = stackTop->next;
+        mainStackTop = mainStackTop->next;
     }
-    return stackTop->data;
+    return mainStackTop->data;
 }
-int isEmpty(node *stackTop)
+int isEmpty(node *mainStackTop)
 {
-    return (stackTop == NULL);
+    return (mainStackTop == NULL);
 }
-void enqueue(que *queue, int element)
+void enqueue(queueStructure*queue, int element)
 {
-    push(&queue->stackTop, element);
+    push(&queue->mainStackTop, element);
 }
-int dequeue(que *queue)
+void swap(node **mainStackTop, node **secondaryStackTop){
+    node *temporaryPointer=*mainStackTop;
+    *mainStackTop=*secondaryStackTop;
+    *secondaryStackTop=temporaryPointer;
+}
+int dequeue(queueStructure*queue)
 {
-    int sizeOfStack = size(queue->stackTop);
+    int sizeOfStack = size(queue->mainStackTop);
     while (sizeOfStack > 1)
     {
-        int element = pop(&queue->stackTop);
-        push(&queue->stackTemp, element);
+        int element = pop(&queue->mainStackTop);
+        push(&queue->secondaryStackTop, element);
         sizeOfStack--;
     }
-    int value = pop(&queue->stackTop);
-    sizeOfStack = size(queue->stackTemp);
-    while (sizeOfStack > 1)
-    {
-        int element = pop(&queue->stackTemp);
-        push(&queue->stackTop, element);
-        sizeOfStack--;
-    }
+    int value = pop(&queue->mainStackTop);
+    swap(&queue->mainStackTop, &queue->secondaryStackTop);
     return value;
 }
-
+void freeQueue(node *head){
+    node *temporaryNode = head;
+    while (head != NULL)
+    {
+        temporaryNode = head;
+        head = head->next;
+        free(temporaryNode);
+        temporaryNode=NULL;
+    }
+}
 int main()
 {
-    que *queue = (que *)malloc(sizeof(que));
-    queue->stackTop = NULL;
-    queue->stackTemp = NULL;
+    queueStructure*queue = (queueStructure*)malloc(sizeof(queueStructure));
+    queue->mainStackTop = NULL;
+    queue->secondaryStackTop = NULL;
     int numberOfOperations = 0, choice = 0;
     printf("Enter the number of operations: ");
     scanf("%d", &numberOfOperations);
@@ -119,7 +127,7 @@ int main()
         }
         else if (choice == 3)
         {
-            int peekElement = peek(queue->stackTop);
+            int peekElement = peek(queue->mainStackTop);
             if (peekElement != -1)
             {
                 printf("Peek element: %d\n", peekElement);
@@ -127,7 +135,7 @@ int main()
         }
         else if (choice == 4)
         {
-            if (isEmpty(queue->stackTop))
+            if (isEmpty(queue->mainStackTop))
             {
                 printf("True\n");
             }
@@ -138,7 +146,7 @@ int main()
         }
         else if (choice == 5)
         {
-            printf("Size: %d\n", size(queue->stackTop));
+            printf("Size: %d\n", size(queue->mainStackTop));
         }
         else if (choice == 6)
         {
@@ -150,5 +158,6 @@ int main()
             printf("Enter valid choice.\n");
         }
     }
+    freeQueue(queue->mainStackTop);
     return 0;
 }
