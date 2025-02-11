@@ -17,28 +17,28 @@ node *createNode(int value)
     temporaryNode->next = NULL;
     return temporaryNode;
 }
-void createList(node **head, int value)
+void addNodeToList(node **head, int value)
 {
     if (*head == NULL)
     {
         *head = createNode(value);
         return;
     }
-    node *pointerToHead = *head;
-    while (pointerToHead->next != NULL)
+    node *traversalNode = *head;
+    while (traversalNode->next != NULL)
     {
-        pointerToHead = pointerToHead->next;
+        traversalNode = traversalNode->next;
     }
-    pointerToHead->next = createNode(value);
+    traversalNode->next = createNode(value);
 }
 void inputElements(node **head, int numberOfElements)
 {
     int element = 0;
-    for (int iterator = 1; iterator < numberOfElements + 1; iterator++)
+    for (int iterator = 1; iterator <= numberOfElements ; iterator++)
     {
         printf("Enter element %d :", iterator);
         scanf("%d", &element);
-        createList(head, element);
+        addNodeToList(head, element);
     }
 }
 void printElements(node *head)
@@ -58,14 +58,14 @@ void printElements(node *head)
 
 void freeLinkedList(node *head)
 {
-
-    node *temp = head;
+    node *temporaryNode = head;
     while (head != NULL)
     {
 
-        temp = head;
+        temporaryNode = head;
         head = head->next;
-        free(temp);
+        free(temporaryNode);
+        temporaryNode=NULL;
     }
 }
 node *sortList(node *head)
@@ -112,44 +112,44 @@ node *sortList(node *head)
 }
 node *mergeTwoSortedLists(node **head1, node **head2)
 {
-    node *pointerToHead1 = *head1, *pointerToHead2 = *head2, *head = NULL;
-    if (!pointerToHead1)
-        return pointerToHead2;
-    if (!pointerToHead2)
-        return pointerToHead1;
-    if (pointerToHead1->data < pointerToHead2->data)
+    node *traversalNode1 = *head1, *traversalNode2 = *head2, *head = NULL;
+    if (!traversalNode1)
+        return traversalNode2;
+    if (!traversalNode2)
+        return traversalNode1;
+    if (traversalNode1->data < traversalNode2->data)
     {
-        head = pointerToHead1;
-        pointerToHead1 = pointerToHead1->next;
+        head = traversalNode1;
+        traversalNode1 = traversalNode1->next;
     }
     else
     {
-        head = pointerToHead2;
-        pointerToHead2 = pointerToHead2->next;
+        head = traversalNode2;
+        traversalNode2 = traversalNode2->next;
     }
-    node *pointerToHead = head;
-    while (pointerToHead1 != NULL && pointerToHead2 != NULL)
+    node *traversalNode = head;
+    while (traversalNode1 != NULL && traversalNode2 != NULL)
     {
-        if (pointerToHead1->data < pointerToHead2->data)
+        if (traversalNode1->data < traversalNode2->data)
         {
-            pointerToHead->next = pointerToHead1;
-            pointerToHead = pointerToHead->next;
-            pointerToHead1 = pointerToHead1->next;
+            traversalNode->next = traversalNode1;
+            traversalNode = traversalNode->next;
+            traversalNode1 = traversalNode1->next;
         }
         else
         {
-            pointerToHead->next = pointerToHead2;
-            pointerToHead = pointerToHead->next;
-            pointerToHead2 = pointerToHead2->next;
+            traversalNode->next = traversalNode2;
+            traversalNode = traversalNode->next;
+            traversalNode2 = traversalNode2->next;
         }
     }
-    if (pointerToHead1)
+    if (traversalNode1)
     {
-        pointerToHead->next = pointerToHead1;
+        traversalNode->next = traversalNode1;
     }
-    else if (pointerToHead2)
+    else if (traversalNode2)
     {
-        pointerToHead->next = pointerToHead2;
+        traversalNode->next = traversalNode2;
     }
     return head;
 }
