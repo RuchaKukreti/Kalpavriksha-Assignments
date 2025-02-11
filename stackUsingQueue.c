@@ -24,7 +24,7 @@ int size(node *front)
     }
     return countOfElements;
 }
-node *create(int element)
+node *createNode(int element)
 {
     node *newNode = (node *)malloc(sizeof(node));
     if (newNode == NULL)
@@ -38,7 +38,7 @@ node *create(int element)
 }
 void enqueue(node **front, node **rear, int element)
 {
-    node *newNode = create(element);
+    node *newNode = createNode(element);
     if (*rear == NULL)
     {
         *front = newNode;
@@ -55,17 +55,18 @@ int dequeue(node **front, node **rear)
         printf("Empty.\n");
         return -1;
     }
-    node *temp = *front;
-    int element = temp->data;
+    node *temporaryNode = *front;
+    int element = temporaryNode->data;
     *front = (*front)->next;
     if (*front == NULL)
     {
         *rear = NULL;
     }
-    free(temp);
+    free(temporaryNode);
+    temporaryNode=NULL;
     return element;
 }
-void peek(node *front, node *rear)
+void peek(node *front)
 {
     if (front == NULL)
     {
@@ -74,7 +75,7 @@ void peek(node *front, node *rear)
     }
     printf("Peek element: %d\n", front->data);
 }
-void isEmpty(node *front, node *rear)
+void isEmpty(node *front)
 {
     if (front == NULL)
     {
@@ -128,11 +129,11 @@ int main()
         }
         else if (choice == 3)
         {
-            peek(stack.queue->front, stack.queue->rear);
+            peek(stack.queue->front);
         }
         else if (choice == 4)
         {
-            isEmpty(stack.queue->front, stack.queue->rear);
+            isEmpty(stack.queue->front);
         }
         else if (choice == 5)
         {
