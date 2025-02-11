@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define maxSize 100
+#define MAX_SIZE 100
 void push(int *stack, int *top, int element)
 {
-    if (*top >= 100)
+    if (*top >= MAX_SIZE)
     {
         printf("Stack is full.");
         return;
@@ -38,7 +38,7 @@ int isEmpty(int *stack, int top)
 int main()
 {
     int top = -1;
-    int stack[maxSize];
+    int stack[MAX_SIZE];
     int numberOfOperations = 0, choice = 0;
     printf("Enter the number of operations: ");
     scanf("%d", &numberOfOperations);
