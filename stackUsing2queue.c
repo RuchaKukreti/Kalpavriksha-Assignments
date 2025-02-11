@@ -107,6 +107,20 @@ int pop(queueStructure *queue)
 {
     return dequeue(&queue->front, &queue->rear);
 }
+void freeQueue(node *head){
+    node *temporaryNode = head;
+    while (head != NULL)
+    {
+        temporaryNode = head;
+        head = head->next;
+        free(temporaryNode);
+        temporaryNode=NULL;
+    }
+}
+void freeStack(stackStructure stack){
+    freeQueue(stack.queue->front);
+    freeQueue(stack.queueTemporaray->front);
+}
 int main()
 {
     stackStructure stack;
@@ -160,5 +174,6 @@ int main()
             printf("Enter valid choice.\n");
         }
     }
+    freeStack(stack);
     return 0;
 }
