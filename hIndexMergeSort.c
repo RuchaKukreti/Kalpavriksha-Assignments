@@ -17,19 +17,19 @@ node *createNode(int value)
     temporaryNode->next = NULL;
     return temporaryNode;
 }
-void createList(node **head, int value)
+void addNodeToList(node **head, int value)
 {
     if (*head == NULL)
     {
         *head = createNode(value);
         return;
     }
-    node *pointerToHead = *head;
-    while (pointerToHead->next != NULL)
+    node *traversalPointer = *head;
+    while (traversalPointer->next != NULL)
     {
-        pointerToHead = pointerToHead->next;
+        traversalPointer = traversalPointer->next;
     }
-    pointerToHead->next = createNode(value);
+    traversalPointer->next = createNode(value);
 }
 void inputCitations(node **head, int numberOfPapers)
 {
@@ -38,7 +38,7 @@ void inputCitations(node **head, int numberOfPapers)
     {
         printf("Enter number of citations for paper %d :", paper);
         scanf("%d", &citations);
-        createList(head, citations);
+        addNodeToList(head, citations);
     }
 }
 void printCitations(node *head)
@@ -57,44 +57,44 @@ void printCitations(node *head)
 }
 node *mergeTwoSortedLists(node **head1, node **head2)
 {
-    node *pointerToHead1 = *head1, *pointerToHead2 = *head2, *head = NULL;
-    if (!pointerToHead1)
-        return pointerToHead2;
-    if (!pointerToHead2)
-        return pointerToHead1;
-    if (pointerToHead1->data > pointerToHead2->data)
+    node *traversalPointer1 = *head1, *traversalPointer2 = *head2, *head = NULL;
+    if (!traversalPointer1)
+        return traversalPointer2;
+    if (!traversalPointer2)
+        return traversalPointer1;
+    if (traversalPointer1->data > traversalPointer2->data)
     {
-        head = pointerToHead1;
-        pointerToHead1 = pointerToHead1->next;
+        head = traversalPointer1;
+        traversalPointer1 = traversalPointer1->next;
     }
     else
     {
-        head = pointerToHead2;
-        pointerToHead2 = pointerToHead2->next;
+        head = traversalPointer2;
+        traversalPointer2 = traversalPointer2->next;
     }
-    node *pointerToHead = head;
-    while (pointerToHead1 != NULL && pointerToHead2 != NULL)
+    node *traversalPointer = head;
+    while (traversalPointer1 != NULL && traversalPointer2 != NULL)
     {
-        if (pointerToHead1->data > pointerToHead2->data)
+        if (traversalPointer1->data > traversalPointer2->data)
         {
-            pointerToHead->next = pointerToHead1;
-            pointerToHead = pointerToHead->next;
-            pointerToHead1 = pointerToHead1->next;
+            traversalPointer->next = traversalPointer1;
+            traversalPointer = traversalPointer->next;
+            traversalPointer1 = traversalPointer1->next;
         }
         else
         {
-            pointerToHead->next = pointerToHead2;
-            pointerToHead = pointerToHead->next;
-            pointerToHead2 = pointerToHead2->next;
+            traversalPointer->next = traversalPointer2;
+            traversalPointer = traversalPointer->next;
+            traversalPointer2 = traversalPointer2->next;
         }
     }
-    if (pointerToHead1)
+    if (traversalPointer1)
     {
-        pointerToHead->next = pointerToHead1;
+        traversalPointer->next = traversalPointer1;
     }
-    else if (pointerToHead2)
+    else if (traversalPointer2)
     {
-        pointerToHead->next = pointerToHead2;
+        traversalPointer->next = traversalPointer2;
     }
     return head;
 }
@@ -115,22 +115,22 @@ void divideLinkedlist(node **head, node **head1, node **head2)
     *head2 = slowPointer;
     previousPointer->next = NULL;
 }
-node *sortCitationsInDescendingOrder(node **head, int numberOfPapers)
+node *sortCitationsInDescendingOrder(node **head)
 {
-    node *pointerToHead1 = NULL, *pointerToHead2 = NULL;
+    node *traversalPointer1 = NULL, *traversalPointer2 = NULL;
     if (*head == NULL || (*head)->next == NULL)
     {
         return *head;
     }
-    divideLinkedlist(head, &pointerToHead1, &pointerToHead2);
-    sortCitationsInDescendingOrder(&pointerToHead1, numberOfPapers);
-    sortCitationsInDescendingOrder(&pointerToHead2, numberOfPapers);
-    return *head = mergeTwoSortedLists(&pointerToHead1, &pointerToHead2);
+    divideLinkedlist(head, &traversalPointer1, &traversalPointer2);
+    sortCitationsInDescendingOrder(&traversalPointer1);
+    sortCitationsInDescendingOrder(&traversalPointer2);
+    return *head = mergeTwoSortedLists(&traversalPointer1, &traversalPointer2);
 }
 int calculateIndex(node *head, int numberOfPapers)
 {
     int hIndex = 0;
-    while (hIndex < numberOfPapers && head->data > hIndex && head != NULL)
+    while (head!=NULL && hIndex < numberOfPapers && head->data > hIndex && head != NULL)
     {
         hIndex += 1;
         head = head->next;
@@ -140,13 +140,13 @@ int calculateIndex(node *head, int numberOfPapers)
 void freeLinkedList(node *head)
 {
 
-    node *temp = head;
+    node *temporaryNode = head;
     while (head != NULL)
     {
-
-        temp = head;
+        temporaryNode = head;
         head = head->next;
-        free(temp);
+        free(temporaryNode);
+        temporaryNode=NULL;
     }
 }
 int main()
@@ -156,7 +156,7 @@ int main()
     printf("Enter the number of research papers: ");
     scanf("%d", &numberOfPapers);
     inputCitations(&head, numberOfPapers);
-    sortCitationsInDescendingOrder(&head, numberOfPapers);
+    sortCitationsInDescendingOrder(&head);
     printf("Research Papers in decreasing order of number of citations:\n");
     printCitations(head);
     hIndex = calculateIndex(head, numberOfPapers);
