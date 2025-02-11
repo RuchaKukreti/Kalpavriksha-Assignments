@@ -17,7 +17,7 @@ node *createNode(int value)
     temporaryNode->next = NULL;
     return temporaryNode;
 }
-void createList(node **head, int value)
+void addNodeToList(node **head, int value)
 {
     if (*head == NULL)
     {
@@ -34,11 +34,11 @@ void createList(node **head, int value)
 void inputPagesOfBooks(node **head, int numberOfBooks)
 {
     int numberOfPages = 0;
-    for (int book = 1; book < numberOfBooks + 1; book++)
+    for (int book = 1; book <= numberOfBooks; book++)
     {
         printf("Enter number of pages for book %d :", book);
         scanf("%d", &numberOfPages);
-        createList(head, numberOfPages);
+        addNodeToList(head, numberOfPages);
     }
 }
 void printBooks(node *head)
@@ -86,7 +86,7 @@ node *sortBooksByNumberOfPages(node *head, int numberOfBooks)
 }
 int findNumberOfStudents(node *head, int numberOfPages)
 {
-    int students = 1, pages = 0;
+    int studentCount = 1, pages = 0;
     while (head != NULL)
     {
         if (pages + head->data <= numberOfPages)
@@ -95,29 +95,12 @@ int findNumberOfStudents(node *head, int numberOfPages)
         }
         else
         {
-            students++;
+            studentCount++;
             pages = head->data;
         }
         head = head->next;
     }
-    return students;
-}
-int binarySearch(node *head, int minValue, int maxValue, int numberOfStudents)
-{
-    while (minValue <= maxValue)
-    {
-        int mid = (minValue + maxValue) / 2;
-        int calculatedNumberOfStudents = findNumberOfStudents(head, mid);
-        if (calculatedNumberOfStudents <= numberOfStudents)
-        {
-            maxValue = mid - 1;
-        }
-        else
-        {
-            minValue = mid + 1;
-        }
-    }
-    return minValue;
+    return studentCount;
 }
 int max(int value1, int value2)
 {
@@ -136,6 +119,34 @@ void calculateMinAndMaxValue(node *head, int *minValue, int *maxValue)
     }
     *maxValue = sumOfPagesOfAllBooks;
 }
+int binarySearch(node *head, int minValue, int maxValue, int numberOfStudents)
+{
+    while (minValue <= maxValue)
+    {
+        int mid = minValue + (maxValue - minValue) / 2;
+        int calculatedNumberOfStudents = findNumberOfStudents(head, mid);
+        if (calculatedNumberOfStudents <= numberOfStudents)
+        {
+            maxValue = mid - 1;
+        }
+        else
+        {
+            minValue = mid + 1;
+        }
+    }
+    return minValue;
+}
+void freeLinkedList(node *head)
+{
+    node *temporaryNode = head;
+    while (head != NULL)
+    {
+        temporaryNode = head;
+        head = head->next;
+        free(temporaryNode);
+        temporaryNode=NULL;
+    }
+}
 int main()
 {
     int numberOfBooks = 0, numberOfStudents = 0, minValue = 0, maxValue = 0;
@@ -151,5 +162,6 @@ int main()
     calculateMinAndMaxValue(sortedHead, &minValue, &maxValue);
     int maximumNumberOfPages = binarySearch(sortedHead, minValue, maxValue, numberOfStudents);
     printf("The minimized value of maximum number of pages assigned to any student is: %d", maximumNumberOfPages);
+    freeLinkedList(head);
     return 0;
 }
