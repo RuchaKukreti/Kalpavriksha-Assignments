@@ -17,28 +17,28 @@ node *createNode(int value)
     temporaryNode->next = NULL;
     return temporaryNode;
 }
-void createList(node **head, int value)
+void addNodeToList(node **head, int value)
 {
     if (*head == NULL)
     {
         *head = createNode(value);
         return;
     }
-    node *pointerToHead = *head;
-    while (pointerToHead->next != NULL)
+    node *traversalNode = *head;
+    while (traversalNode->next != NULL)
     {
-        pointerToHead = pointerToHead->next;
+        traversalNode = traversalNode->next;
     }
-    pointerToHead->next = createNode(value);
+    traversalNode->next = createNode(value);
 }
 void inputElements(node **head, int numberOfElements)
 {
     int element = 0;
-    for (int iterator = 1; iterator < numberOfElements + 1; iterator++)
+    for (int iterator = 1; iterator <= numberOfElements ; iterator++)
     {
         printf("Enter element %d :", iterator);
         scanf("%d", &element);
-        createList(head, element);
+        addNodeToList(head, element);
     }
 }
 void printElements(node *head)
@@ -58,14 +58,13 @@ void printElements(node *head)
 
 void freeLinkedList(node *head)
 {
-
-    node *temp = head;
+    node *temporaryNode = head;
     while (head != NULL)
     {
-
-        temp = head;
+        temporaryNode = head;
         head = head->next;
-        free(temp);
+        free(temporaryNode);
+        temporaryNode=NULL;
     }
 }
 node *getTail(node *head)
@@ -138,7 +137,7 @@ void createOddEvenList(node *head, node **oddList, node **evenList)
     {
         if (isOdd(temp->data))
         {
-            createList(oddList, temp->data);
+            addNodeToList(oddList, temp->data);
         }
         temp = temp->next;
     }
@@ -147,7 +146,7 @@ void createOddEvenList(node *head, node **oddList, node **evenList)
     {
         if (!isOdd(temp->data))
         {
-            createList(evenList, temp->data);
+            addNodeToList(evenList, temp->data);
         }
         temp = temp->next;
     }
