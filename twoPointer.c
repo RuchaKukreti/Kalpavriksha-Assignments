@@ -17,19 +17,19 @@ node *createNode(int value)
     temporaryNode->next = NULL;
     return temporaryNode;
 }
-void createList(node **head, int value)
+void addNodeToList(node **head, int value)
 {
     if (*head == NULL)
     {
         *head = createNode(value);
         return;
     }
-    node *pointerToHead = *head;
-    while (pointerToHead->next != NULL)
+    node *traversalPointer = *head;
+    while (traversalPointer->next != NULL)
     {
-        pointerToHead = pointerToHead->next;
+        traversalPointer = traversalPointer->next;
     }
-    pointerToHead->next = createNode(value);
+    traversalPointer->next = createNode(value);
 }
 void inputElements(node **head, int numberOfElements)
 {
@@ -38,7 +38,7 @@ void inputElements(node **head, int numberOfElements)
     {
         printf("Enter element %d :", iterator);
         scanf("%d", &element);
-        createList(head, element);
+        addNodeToList(head, element);
     }
 }
 void printElements(node *head)
@@ -58,12 +58,13 @@ void printElements(node *head)
 
 void freeLinkedList(node *head)
 {
-    node *temp = head;
+    node *temporaryNode = head;
     while (head != NULL)
     {
-        temp = head;
+        temporaryNode = head;
         head = head->next;
-        free(temp);
+        free(temporaryNode);
+        temporaryNode=NULL;
     }
 }
 
