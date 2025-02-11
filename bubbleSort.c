@@ -6,19 +6,15 @@ typedef struct node
     char severity[20];
     struct node *next;
 } node;
-void stringCopy(char *string1, char *string2)
+void stringCopy(char *targetString, char *sourceString)
 {
     int iterator = 0;
-    while (string2[iterator] != '\0')
+    while (sourceString[iterator] != '\0')
     {
-        string1[iterator] = string2[iterator];
+        targetString[iterator] = sourceString[iterator];
         iterator++;
     }
-    while (string1[iterator] != '\0')
-    {
-        string1[iterator] = '\0';
-        iterator++;
-    }
+    targetString[iterator] = '\0';
 }
 node *createNode(int value, char *severity)
 {
@@ -62,7 +58,7 @@ int stringCompare(char *string1, char *string2)
         return 1;
     return 0;
 }
-void inputPatients(node **head, int numberOfPatients)
+int inputPatients(node **head, int numberOfPatients)
 {
     int patientId = 0;
     char severity[20];
@@ -79,9 +75,10 @@ void inputPatients(node **head, int numberOfPatients)
         else
         {
             printf("Value for severity is not valid.\n");
-            return;
+            return -1;
         }
     }
+    return 0;
 }
 void printPatients(node *head)
 {
@@ -101,13 +98,13 @@ void printPatients(node *head)
 void freeLinkedList(node *head)
 {
 
-    node *temp = head;
+    node *temporaryNode = head;
     while (head != NULL)
     {
-
-        temp = head;
+        temporaryNode = head;
         head = head->next;
-        free(temp);
+        free(temporaryNode);
+        temporaryNode=NULL;
     }
 }
 int priority(char *severity)
@@ -167,7 +164,7 @@ node *sortPatients(node *head)
                     previousNode = pointer;
                 }
                 continue;
-            }
+            }tem
             previousNode = nextNode;
             nextNode = nextNode->next;
         }
@@ -185,7 +182,9 @@ int main()
     node *head = NULL;
     printf("Enter the number of patients: ");
     scanf("%d", &numberOfPatients);
-    inputPatients(&head, numberOfPatients);
+    if(inputPatients(&head, numberOfPatients)==-1 || numberOfPatients==0){
+        return 0;
+    }
     printf("Patients List:\n");
     printPatients(head);
     printf("Sorted patients List as per priority:\n");
