@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define maxSize 100
+#define MAX_SIZE 100
 typedef struct node
 {
     int data;
@@ -25,7 +25,7 @@ int size(node *stackTop)
 }
 void push(node **stackTop, int element)
 {
-    if (size(*stackTop) >= 100)
+    if (size(*stackTop) >= MAX_SIZE)
     {
         printf("Stack is full.");
         return;
